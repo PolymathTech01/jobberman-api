@@ -20,7 +20,7 @@ const hashMyPassword = async (password) => {
 const createJobSeeker = async (req, res) => {
   const JobSeekerValidation = Joi.object({
     firstname: Joi.string().required(),
-    lastname: Joi.string().required(),
+    surname: Joi.string().required(),
     email: Joi.string().email().required(),
     gender: Joi.string(),
     DateOfBirth: Joi.date().required(),
@@ -51,7 +51,7 @@ const createJobSeeker = async (req, res) => {
   } else {
     const {
       firstname,
-      lastname,
+      surname,
       email,
       password,
       DateOfBirth,
@@ -78,7 +78,7 @@ const createJobSeeker = async (req, res) => {
         return newJobSeeker(
           job_seeker_id,
           firstname,
-          lastname,
+          surname,
           email,
           passwordHashed[1],
           DateOfBirth,

@@ -1,5 +1,4 @@
-const reject  = require('bcrypt/promises')
-const res = require('express/lib/response')
+
 const mysqlConnection = require('../config/mysql')
 
 const getUSerDetailsByEmail_JobSeeker = async (email) =>{

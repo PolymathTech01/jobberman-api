@@ -1,11 +1,11 @@
 const mysqlConnection = require("../config/mysql")
 
 
-const newJobSeeker = async(job_seeker_id, firstname, lastname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category) =>{
+const newJobSeeker = async(job_seeker_id, firstname, surname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category) =>{
     return new Promise ((resolve, reject)=>{
         mysqlConnection.query({
-            sql: `Insert into job_seeker(job_seeker_id, firstname, lastname, email, passwordHash, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-            values: [job_seeker_id, firstname, lastname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category]
+            sql: `Insert into job_seeker(job_seeker_id, firstname, surname, email, passwordHash, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            values: [job_seeker_id, firstname, surname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category]
         },
         (err, results, fields)=>{
             if (err) {reject(err)}
@@ -28,7 +28,66 @@ const checkUser = async(email, job_seeker_id) =>{
     })
 }
 
+
+const getUSerDetailsByEmail_JobSeeker = async (email) =>{
+    return new Promise ((resolve, reject) =>{
+        mysqlConnection.query({
+            sql: `select * from job_seeker where email=?`,
+            values: [email]
+        },
+          (err, results, fields) => {
+              if(err) {
+                reject(err)
+              }
+              resolve(results)
+          })
+    })
+}
+
+
+const getUserDetailsByEmail_Employer = async (email) => {
+   
+    return new Promise((resolve, reject) => {
+
+        mysqlConnection.query({
+            sql: `select * from Employer where email=?`,
+            values: [email]
+        },
+          (err, results, fields) => {
+                if (err) {
+                 reject(err)
+                }
+                resolve(results)
+          })
+    })
+}
+
+
+const getUserDetailsByEmail_Admin = async (email) => {
+   
+    return new Promise((resolve, reject) => {
+
+        mysqlConnection.query({
+            sql: `select * from Admin where email=?`,
+            values: [email]
+        },
+          (err, results, fields) => {
+                if (err) {
+                 reject(err)
+                }
+                resolve(results)
+          })
+    })
+}
+
+
+
+
+
 module.exports = {
     checkUser,
-    newJobSeeker
+    newJobSeeker,
+    getUSerDetailsByEmail_JobSeeker,
+    getUserDetailsByEmail_Employer,
+    getUserDetailsByEmail_Admin,
 }
