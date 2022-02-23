@@ -3,12 +3,14 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const displayRoutes = require("express-routemap")
-
+const routes = require("./routes/user.routes")
 const mysqlConnection = require("./config/mysql")
 
 
 
 app.use(bodyParser.json())
+
+
 const port = process.env.PORT
 
 app.listen(port, () => {
@@ -20,6 +22,7 @@ mysqlConnection.connect(err =>{
     console.log("successfully connnected: ", mysqlConnection.threadId)
 })
 
+app.use(routes)
 
 app.get("/", (res, req)=>{
     res.status(422).send({
@@ -30,7 +33,7 @@ app.get("/", (res, req)=>{
 
 app.use((req, res, next) =>{
     res.status(422).send({
-        status: false,\
+        status: false,
         message: "You got lost, Sorry"
     })
 })
