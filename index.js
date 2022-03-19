@@ -3,13 +3,14 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const displayRoutes = require("express-routemap")
-const routes = require("./routes/user.routes")
+const jobSeekerRoutes = require("./routes/jobSeeker.routes")
+const morgan = require("morgan")
 const mysqlConnection = require("./config/mysql")
 
 
 
 app.use(bodyParser.json())
-
+app.use(morgan("combined"))
 
 const port = process.env.PORT
 
@@ -22,7 +23,7 @@ mysqlConnection.connect(err =>{
     console.log("successfully connnected: ", mysqlConnection.threadId)
 })
 
-app.use(routes)
+app.use(jobSeekerRoutes)
 
 app.get("/", (res, req)=>{
     res.status(422).send({
