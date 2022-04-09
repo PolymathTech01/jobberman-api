@@ -1,11 +1,11 @@
 const mysqlConnection = require("../config/mysql")
 
 
-const newJobSeeker = async(job_seeker_id, firstname, surname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category) =>{
+const newJobSeeker = async(job_seeker_id, firstname, surname, email, password, DateOfBirth, gender, Nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availability, SubscribeForAds, category) =>{
     return new Promise ((resolve, reject)=>{
         mysqlConnection.query({
-            sql: `Insert into job_seeker(job_seeker_id, firstname, surname, email, passwordHash, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-            values: [job_seeker_id, firstname, surname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category]
+            sql: `Insert into job_seeker(job_seeker_id, firstname, surname, email, passwordHash, DateOfBirth, gender, Nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availability, SubscribeForAds, category)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+            values: [job_seeker_id, firstname, surname, email, password, DateOfBirth, gender, Nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availability, SubscribeForAds, category]
         },
         (err, results, fields)=>{
             if (err) {reject(err)}
@@ -14,6 +14,7 @@ const newJobSeeker = async(job_seeker_id, firstname, surname, email, password, D
         )
     })
 }
+
 
 const checkUser = async(email, job_seeker_id) =>{
     return new Promise((resolve, reject)=>{

@@ -2,7 +2,7 @@ const { newJobSeeker, checkUser } = require("../models/user.models");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
-const { doSomeAsyncMagik, isEmpty } = require("../utils/utils");
+const { asyncErrorHandler, isEmpty } = require("../utils/utils");
 const saltRounds = 10;
 const hashMyPassword = async (password) => {
   return new Promise((resolve, reject) => {
@@ -25,7 +25,7 @@ const createJobSeeker = async (req, res) => {
     gender: Joi.string(),
     DateOfBirth: Joi.date().required(),
     password: Joi.string().required(),
-    nationality: Joi.string().required(),
+    Nationality: Joi.string().required(),
     location: Joi.string().required(),
     CountryCode: Joi.string().required(),
     phone: Joi.string().required(),
@@ -38,11 +38,12 @@ const createJobSeeker = async (req, res) => {
     ),
     CurrentJobFunction: Joi.string().required(),
     YearsExperience: Joi.number().required(),
-    Availabity: Joi.string().required(),
+    Availability: Joi.string().required(),
     SubscribeForAds: Joi.boolean(),
     category: Joi.string().valid("Software", "Accounting", "Medicine"),
   });
   const responseJobSeekerValidation = JobSeekerValidation.validate(req.body);
+  console.log(JobSeekerValidation)
   if (responseJobSeekerValidation.error) {
     res.status(422).send({
       status: false,
@@ -56,14 +57,14 @@ const createJobSeeker = async (req, res) => {
       password,
       DateOfBirth,
       gender,
-      nationality,
+      Nationality,
       location,
       CountryCode,
       phone,
       HighestQualification,
       CurrentJobFunction,
       YearsExperience,
-      Availabity,
+      Availability,
       SubscribeForAds,
       category,
     } = req.body;
@@ -83,14 +84,14 @@ const createJobSeeker = async (req, res) => {
           passwordHashed[1],
           DateOfBirth,
           gender,
-          nationality,
+          Nationality,
           location,
           CountryCode,
           phone,
           HighestQualification,
           CurrentJobFunction,
           YearsExperience,
-          Availabity,
+          Availability,
           SubscribeForAds,
           category
         );
@@ -118,7 +119,7 @@ const createJobSeeker = async (req, res) => {
 //     const {firstname, lastname, email, password, DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category} = req.body
 //     const job_seeker_id = uuidv4()
 //     try{
-//         const [err, checkIfUserExists] = await doSomeAsyncMagik(checkUser(email, job_seeker_id))
+//         const [err, checkIfUserExists] = await asyncErrorHandler(checkUser(email, job_seeker_id))
 //         if(err)
 //         {
 //             console.log("error, ", err)
@@ -129,7 +130,7 @@ const createJobSeeker = async (req, res) => {
 //             throw new Error("User with Email/Phone exists")
 //         }
 //         const passwordHashed = await hashMyPassword(password)
-//         const [error, responseNewUser] = await doSomeAsyncMagik(newUser(job_seeker_id,firstname, lastname, email, passwordHashed[1], DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category))
+//         const [error, responseNewUser] = await asyncErrorHandler(newUser(job_seeker_id,firstname, lastname, email, passwordHashed[1], DateOfBirth, gender, nationality, location, CountryCode, phone, HighestQualification, CurrentJobFunction, YearsExperience, Availabity, SubscribeForAds, category))
 //         if(error){
 //             throw new Error(error)
 //         }

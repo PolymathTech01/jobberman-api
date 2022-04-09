@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const { getUSerDetailsByEmail_JobSeeker, getUserDetailsByEmail_Employer,getUserDetailsByEmail_Admin} = require('../models/user.models')
 const { reject } = require('bcrypt/promises')
-
+const { v4: uuidv4 } = require('uuid') 
 
     // THIS IS JOB-SEEKER'S LOGIN FUNCTION
     const Login_JobSeeker = async(req, res)=> {
@@ -23,14 +23,14 @@ const { reject } = require('bcrypt/promises')
         return bcrypt.compare(password, DetailsPayload.passwordHash)
     })
     .then(responseFromCompare => {
-        // console.log("hfhh:", responseFromCompare)
         if(responseFromCompare == false){
             throw new Error ("Invalid Email or password")
         }
 
     const DataToAddInPayload = {
         email: DetailsPayload.email,
-        Identity: false
+        _isAdmin:false,
+        Identity: uuidv4
         }
             jwt.sign(DataToAddInPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_TIME },
                 (err, token) => {
@@ -60,7 +60,6 @@ const { reject } = require('bcrypt/promises')
         const {email, password } = req.body
 
         let DetailsPayload = null
-
     getUserDetailsByEmail_Employer(email)
     .then(responseFromlogin => {
         if(responseFromlogin =="") {
@@ -68,17 +67,20 @@ const { reject } = require('bcrypt/promises')
         }
 
         DetailsPayload = responseFromlogin[0]
+        console.log("i got here: ", DetailsPayload)
         
         return bcrypt.compare(password, DetailsPayload.passwordHash)
     })
     .then(responseFromCompare => {
         if(responseFromCompare == false){
+            console.log("ccevv:",responseFromCompare)
             throw new Error ("Invalid Email or password")
         }
 
     const DataToAddInPayload = {
         email: DetailsPayload.email,
-        Identity: false
+        _isAdmin:false,
+        Identity: uuidv4
         }
             jwt.sign(DataToAddInPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_TIME },
                 (err, token) => {
@@ -102,7 +104,7 @@ const { reject } = require('bcrypt/promises')
             })  
     } 
     
-        // THIS IS ADMIN'S LOGIN FUNCTION
+    // THIS IS ADMIN'S LOGIN FUNCTION
     const Login_Admin = async(req, res)=> {
 
         const {email, password } = req.body
@@ -126,7 +128,8 @@ const { reject } = require('bcrypt/promises')
 
     const DataToAddInPayload = {
         email: DetailsPayload.email,
-        Identity: false
+        _isAdmin:true,
+        Identity: uuidv4
         }
             jwt.sign(DataToAddInPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRE_TIME },
                 (err, token) => {

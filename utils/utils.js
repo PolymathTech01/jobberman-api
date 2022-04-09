@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true })
  * @param { Object= } errorExt - Additional Information you can pass to the err object
  * @return { Promise }
  */
-const doSomeAsyncMagik = (promise, errorExt) => {
+const AsyncErrorHandler = (promise, errorExt) => {
             return promise
                 .then(function (data) { return [null, data]; })
                 .catch(function (err) {
@@ -38,7 +38,7 @@ const makePhoneNumberInternational = (phoneNumber) =>
 }
 
 module.exports = {
-    doSomeAsyncMagik,
+    AsyncErrorHandler,
     isEmpty,
     makePhoneNumberInternational
 }
