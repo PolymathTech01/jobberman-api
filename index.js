@@ -4,11 +4,14 @@ const app = express()
 const bodyParser = require("body-parser")
 const displayRoutes = require("express-routemap")
 const jobSeekerRoutes = require("./routes/jobSeeker.routes")
+const employerRouters = require("./routes/employer.routes")
+const adminRoutes = require("./routes/admin.routes")
 const morgan = require("morgan")
+const cors = require("cors")
 const mysqlConnection = require("./config/mysql")
 
 
-
+app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan("combined"))
 
@@ -24,6 +27,8 @@ mysqlConnection.connect(err =>{
 })
 
 app.use(jobSeekerRoutes)
+app.use(employerRouters)
+app.use(adminRoutes)
 
 app.get("/", (res, req)=>{
     res.status(422).send({

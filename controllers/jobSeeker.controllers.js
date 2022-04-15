@@ -1,15 +1,12 @@
 const {
   newJobSeeker,
-  checkUser,
-  checkEmployeer,
-  newEmployer,
-  newAdmin,
-  checkAdmin,
+  checkJobSeeker,
+  getJobSeekerDetailsByEmail,
   insertOtpJobSeeker,
   getOtp,
   deleteOtpById,
   updateOtpStatus,
-  checkUserById
+  checkJobSeekerById
 } = require("../models/jobSeeker.models");
 const Joi = require("joi");
 const { v4: uuidv4 } = require("uuid");
@@ -72,7 +69,7 @@ const createJobSeeker = async (req, res) => {
     } = req.body;
     const passwordHashed = await hashMyPassword(password);
     const job_seeker_id = uuidv4();
-    checkUser(email, job_seeker_id)
+    checkJobSeeker(email, job_seeker_id)
       .then((checkUserResult) => {
         if (checkUserResult != "") {
           throw new Error("Customer exist");
@@ -98,10 +95,10 @@ const createJobSeeker = async (req, res) => {
           category
         );
       })
-      .then(newUserResult =>{
+      .then(() =>{
         return insertOtpJobSeeker(job_seeker_id, otp)
       })
-      .then((otpResult) => {
+      .then(otpResult => {
         console.log("new user", otpResult);
         if (otpResult) {
           const userFullname = `${firstname} ${lastname}`;
@@ -117,7 +114,7 @@ const createJobSeeker = async (req, res) => {
           );
         }
       })
-      .then((sentEmail) => {
+      .then(() => {
         
           res.status(200).send({
             status: true,
@@ -126,14 +123,6 @@ const createJobSeeker = async (req, res) => {
       
       })
 
-      .then(() => {
-       
-        const userFullname = `${firstname} ${lastname}`
-        const dataReplacement = {
-          "fullname": userFullname,
-        }
-        emailServies.readFileAndSendEmail(email, "OTP VERIFICATION", dataReplacement, 'otp')
-      })
 
       .catch((error) => {
         res.status(422).send({
@@ -158,6 +147,7 @@ const verifyOtp = (req, res) =>{
     }
     // console.log("date", new Date())
     // console.log("created ", otpResult)
+    
     const elapsedTime = Date.now() - otpResult[0].created_at
     if ((Math.floor(elapsedTime/ 60000) >
     1000)){
@@ -167,7 +157,7 @@ const verifyOtp = (req, res) =>{
     updateOtpStatus(job_seeker_id)
   })
   .then(()=>{
-    return checkUserById(job_seeker_id)
+    return checkJobSeekerById(job_seeker_id)
   })
   .then(responseCheckUser=>{
     
@@ -231,9 +221,37 @@ const verifyOtp = (req, res) =>{
 // }
 
 
+const resendOtp = async (req, res) => {
+  const {  email } = req.params
+  const otp = generateOTP()
 
+  try{
+    const jobSeekerDetails = await getJobSeekerDetailsByEmail(email)
+    const fullname = `${jobSeekerDetails[0].firstname} ${jobSeekerDetails[0].lastname}`
+    const dataReplacement = {
+      "fullname": fullname
+    }
+    await deleteOtpById(jobSeekerDetails[0].job_seeker_id)
+    await insertOtpJobSeeker(jobSeekerDetails[0].job_seeker_id, otp)
+    await emailServies.readFileAndSendEmail(email, "OTP VERIFICATION", dataReplacement, 'otp')
+
+    res.status(200).send({
+      status: true,
+      message: "Otp sent successfully pls check your mail"
+    })
+  }
+  catch(err){
+
+    res.status(400).send({
+      status: false,
+      message: err.message
+    })
+  }
+
+}
 
 module.exports = {
   createJobSeeker,
-  verifyOtp
+  verifyOtp,
+  resendOtp
 };
