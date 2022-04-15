@@ -9,6 +9,7 @@ const adminRoutes = require("./routes/admin.routes")
 const morgan = require("morgan")
 const cors = require("cors")
 const mysqlConnection = require("./config/mysql")
+const authRoute =require('./routes/auth.route')
 
 
 app.use(cors())
@@ -21,6 +22,9 @@ app.listen(port, () => {
     console.log(`I am listening on port ${port}`)
     displayRoutes(app)
 })
+
+app.use(authRoute)
+
 mysqlConnection.connect(err =>{
     if (err) throw err.stack
     console.log("successfully connnected: ", mysqlConnection.threadId)
