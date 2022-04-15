@@ -8,17 +8,35 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PolymathTech01/jobberman-api.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PolymathTech01/jobberman-api/issues"
+  },
+  "homepage": "https://github.com/PolymathTech01/jobberman-api#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-routemap": "^1.6.0",
+    "fs": "^0.0.1-security",
     "joi": "^17.6.0",
+<<<<<<< HEAD
+    "morgan": "^1.10.0",
+=======
+    "jsonwebtoken": "^8.5.1",
+>>>>>>> 4d5b846d640661516297026ff371e5fb18ebb918
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.15"
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.15",
+    "uuid": "^8.3.2",
+    "winston": "^3.6.0"
   }
 }
